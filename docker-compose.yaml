@@ -1,0 +1,41 @@
+version: "3.9"
+
+networks:
+  logica_net:
+    driver: bridge
+
+volumes:
+  logica_data:
+    name: logica_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: C:/Users/Altergeist/Documents/data/db/logica
+
+services:
+
+  logica_api:
+    container_name: logica_api
+    image: logica_api:0.1.0
+    restart: always
+    command: sh -c "poetry shell && alembic upgrade head && poetry run start"
+    depends_on:
+      - logica_postgres
+    networks:
+      - logica_net
+    ports:
+      - 8888:8888
+
+  logica_postgres:
+    container_name: logica_postgres
+    image: postgres:15.3-alpine3.18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: test
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - logica_data:/var/lib/postgresql/data/pgdata
+    networks:
+      - logica_net
