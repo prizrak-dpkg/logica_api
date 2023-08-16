@@ -1,3 +1,6 @@
+import json
+import traceback
+
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -7,7 +10,7 @@ from logica_api.models.mixins import TimeMixin
 from logica_api.schemas.exceptionlog import ExceptionSchema
 
 
-class ExceptionLog(TimeMixin, Base):
+class ExceptionLogModel(TimeMixin, Base):
     __tablename__ = "exceptionlog"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -31,3 +34,16 @@ class ExceptionLog(TimeMixin, Base):
             statement = select(cls).order_by(cls.created_at.desc()).limit(1)
             result = await session.execute(statement)
             return result.scalars().first()
+
+    @classmethod
+    async def register_exception(cls, exception: Exception):
+        exception_info = {
+            "error_type": type(exception).__name__,
+            "message": str(exception),
+            "traceback": traceback.format_exc(),
+        }
+        json_data = json.dumps(exception_info)
+        exception_schema = ExceptionSchema(
+            description=f"Error processing CSV: {json_data}"
+        )
+        await cls.create_async(exception_schema)

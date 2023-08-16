@@ -12,18 +12,27 @@ volumes:
       type: none
       o: bind
       device: C:/Users/Altergeist/Documents/data/db/logica
+  logica_uploads:
+    name: logica_uploads
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: C:/Users/Altergeist/Documents/data/uploads/logica
 
 services:
 
   logica_api:
     container_name: logica_api
-    image: logica_api:0.1.0
+    image: logica_api:1.0.0
     restart: always
     command: sh -c "poetry shell && alembic upgrade head && poetry run start"
     depends_on:
       - logica_postgres
     networks:
       - logica_net
+    volumes:
+      - logica_uploads:/logica_api/uploads
     ports:
       - 8888:8888
 

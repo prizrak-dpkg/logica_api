@@ -128,7 +128,7 @@ class AsyncDBSession:
 db = AsyncDBSession()
 
 
-async def commit_rollback():
+async def commit_rollback(session=None):
     """
     Confirma los cambios o hace un rollback de la sesión.
 
@@ -136,9 +136,15 @@ async def commit_rollback():
         Exception: Si ocurre un error durante la confirmación, se intenta un rollback.
     """
     try:
-        await db.session.commit()
+        if session is None:
+            await db.session.commit()
+        else:
+            await session.commit()
     except Exception as e:
-        await db.session.rollback()
+        if session is None:
+            await db.session.rollback()
+        else:
+            await session.commit()
         raise HTTPException(
             status_code=HTTP_409_CONFLICT,
             detail=[

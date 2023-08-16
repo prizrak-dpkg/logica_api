@@ -1,3 +1,4 @@
+import asyncio
 import uvicorn
 
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
@@ -6,9 +7,11 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from data import InitialData
 
 from logica_api import routers
 from logica_api.config import db, get_settings
+from logica_api.tasks.monitor import MonitorUpload
 
 is_production = False
 
@@ -44,6 +47,9 @@ def init_api() -> FastAPI:
         Función de devolución de llamada para el evento de inicio.
         """
         await db.create_all()
+        initial_data = InitialData()
+        await initial_data.upload_data_async()
+        asyncio.create_task(MonitorUpload.monitor_tasks())
         for router in routers:
             api.include_router(router, prefix="/api")
         if not is_production:
