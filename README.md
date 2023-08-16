@@ -12,7 +12,7 @@
 | --------------- | ------------- | ------------- | ------------- | ---------------- | ------------ |
 | 28/03/2022      | 7711000000183 | 7701023999014 | 7708951417931 | 0                | 7731.09      |
 
-- Porque los códigos de cliente, sucursal o producto, no están relacionados con un registro de los modelos **client**, **branch** o **product** respectivamente. Ya que estos códigos son llaves foráneas que se relacionan con estos modelos. Al iniciar la aplicación, el sistema carga datos de prueba mediante archivos **JSON**, puedes revisarlos en el directorio **data** del proyecto. También se incluyo un archivo de prueba con más de 1 millón de registros para que puedan probar el sistema. Notaran que mientras procesa el archivo pueden cargar otros, o consultar los datos subidos en el endpoint **/api/inventory** en su método de petición **GET**.
+- Porque los códigos de cliente, sucursal o producto, no están relacionados con un registro de los modelos **client**, **branch** o **product** respectivamente. Ya que estos códigos son llaves foráneas que se relacionan con estos modelos. Al iniciar la aplicación, el sistema carga datos de prueba mediante archivos **JSON**, puedes revisarlos en el directorio **data** del proyecto. También se incluyo un archivo de prueba con más de 1 millón de registros para que puedan probar el sistema, este lo pueden encontrar en la raíz del proyecto con el nombre **data.csv**. Notaran que mientras procesa el archivo pueden cargar otros, o consultar los datos subidos en el endpoint **/api/inventory** en su método de petición **GET**.
 
 **Instalación**
 
